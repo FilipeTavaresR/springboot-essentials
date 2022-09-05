@@ -1,6 +1,6 @@
 package br.com.devdojo.error;
 
-public class ValidationErrorDetails extends ErrorDetail{
+public class ValidationErrorDetails extends ErrorDetails {
 
     private String field;
     private String fieldMessage;
@@ -11,47 +11,61 @@ public class ValidationErrorDetails extends ErrorDetail{
         private String detail;
         private long timestamp;
         private String developerMessage;
+        private String field;
+        private String fieldMessage;
 
         private Builder() {
         }
 
-        public static ResourceNotFoundDetails.Builder newBuilder() {
-            return new ResourceNotFoundDetails.Builder();
+        public static Builder newBuilder() {
+            return new Builder();
         }
 
-        public ResourceNotFoundDetails.Builder title(String title) {
+        public Builder title(String title) {
             this.title = title;
             return this;
         }
 
-        public ResourceNotFoundDetails.Builder status(int status) {
+        public Builder status(int status) {
             this.status = status;
             return this;
         }
 
-        public ResourceNotFoundDetails.Builder detail(String detail) {
+        public Builder detail(String detail) {
             this.detail = detail;
             return this;
         }
 
-        public ResourceNotFoundDetails.Builder timestamp(long timestamp) {
+        public Builder timestamp(long timestamp) {
             this.timestamp = timestamp;
             return this;
         }
 
-        public ResourceNotFoundDetails.Builder developerMessage(String developerMessage) {
+        public Builder field(String field) {
+            this.field = field;
+            return this;
+        }
+
+        public Builder fieldMessage(String fieldMessage) {
+            this.fieldMessage = fieldMessage;
+            return this;
+        }
+
+        public Builder developerMessage(String developerMessage) {
             this.developerMessage = developerMessage;
             return this;
         }
 
-        public ResourceNotFoundDetails build() {
-            ResourceNotFoundDetails resourceNotFoundDetails = new ResourceNotFoundDetails();
-            resourceNotFoundDetails.setDeveloperMessage(developerMessage);
-            resourceNotFoundDetails.setTimestamp(timestamp);
-            resourceNotFoundDetails.setTitle(title);
-            resourceNotFoundDetails.setDetail(detail);
-            resourceNotFoundDetails.setStatus(status);
-            return resourceNotFoundDetails;
+        public ValidationErrorDetails build() {
+            ValidationErrorDetails validationErrorDetails = new ValidationErrorDetails();
+            validationErrorDetails.setDeveloperMessage(developerMessage);
+            validationErrorDetails.setTimestamp(timestamp);
+            validationErrorDetails.setTitle(title);
+            validationErrorDetails.setDetail(detail);
+            validationErrorDetails.setStatus(status);
+            validationErrorDetails.field = field;
+            validationErrorDetails.fieldMessage = fieldMessage;
+            return validationErrorDetails;
         }
     }
 
