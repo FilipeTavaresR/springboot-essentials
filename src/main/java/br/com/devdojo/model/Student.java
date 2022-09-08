@@ -15,6 +15,14 @@ public class Student extends AbstractEntity {
     @NotEmpty(message = "Email cannot be null")
     private String email;
 
+    @Override
+    public String toString() {
+        return "Student{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
+
     public String getEmail() {
         return email;
     }
