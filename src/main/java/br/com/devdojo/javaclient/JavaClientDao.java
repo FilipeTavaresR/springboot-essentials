@@ -1,5 +1,6 @@
 package br.com.devdojo.javaclient;
 
+import br.com.devdojo.handler.RestResponseExceptionHandler;
 import br.com.devdojo.model.PageableResponse;
 import br.com.devdojo.model.Student;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -10,13 +11,19 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 public class JavaClientDao {
-    private RestTemplate restTemplate = new RestTemplateBuilder().rootUri("http://localhost:8080/v1/protected/students")
-            .basicAuthentication("admin", "admin").build();
-    private RestTemplate restTemplateAdmin = new RestTemplateBuilder().rootUri("http://localhost:8080/v1/admin/students")
-            .basicAuthentication("admin", "admin").build();
+    private RestTemplate restTemplate = new RestTemplateBuilder()
+            .rootUri("http://localhost:8080/v1/protected/students")
+            .basicAuthentication("user", "user")
+            .errorHandler(new RestResponseExceptionHandler())
+            .build();
+    private RestTemplate restTemplateAdmin = new RestTemplateBuilder()
+            .rootUri("http://localhost:8080/v1/admin/students")
+            .basicAuthentication("admin", "admin")
+            .errorHandler(new RestResponseExceptionHandler())
+            .build();
 
     public Student findById(long id){
-        return restTemplate.getForObject("/{id}", Student.class, 1);
+        return restTemplate.getForObject("/{id}", Student.class, id);
     }
 
     public List<Student> listAll(String parametros){
@@ -35,6 +42,12 @@ public class JavaClientDao {
         ResponseEntity<Student> exchangePost = restTemplateAdmin.exchange("/",
                 HttpMethod.POST, new HttpEntity<>(student,createJSONHeader()), Student.class);
         return exchangePost.getBody();
+    }
+    public void update(Student student){
+        restTemplateAdmin.put("/",student);
+    }
+    public void delete(long id){
+        restTemplateAdmin.delete("/{id}",id);
     }
     private static HttpHeaders createJSONHeader(){
         HttpHeaders headers = new HttpHeaders();

@@ -30,6 +30,7 @@ public class StudentEndpoint {
 
     @GetMapping(path = "protected/students/")
     public ResponseEntity<?> listAll(Pageable pageable) {
+        System.out.println(studentDao.findAll());
         return new ResponseEntity<>(studentDao.findAll(pageable), HttpStatus.OK);
     }
 
@@ -52,10 +53,10 @@ public class StudentEndpoint {
         return new ResponseEntity<>(studentDao.save(student), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path = "admin/students/")
+    @DeleteMapping(path = "admin/students/{id}")
     //@PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> delete(@RequestBody Student student) {
-        studentDao.delete(student);
+    public ResponseEntity<?> delete(@PathVariable("id") long id) {
+        studentDao.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -64,5 +65,4 @@ public class StudentEndpoint {
         studentDao.save(student);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

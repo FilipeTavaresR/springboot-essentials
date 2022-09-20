@@ -9,11 +9,13 @@ public class JavaSpringClientTest {
         Student studentPost = new Student();
         studentPost.setName("post1");
         studentPost.setEmail("post1@post.com.br");
+//        studentPost.setId(4l);
         JavaClientDao dao = new JavaClientDao();
-        System.out.println(dao.findById(1));
-        System.out.println(dao.listAll());
-        System.out.println(dao.save(studentPost));
-
+//        System.out.println(dao.findById(70));
+//        System.out.println(dao.listAll());
+//        System.out.println(dao.save(studentPost));
+//        dao.update(studentPost);
+        dao.delete(5l);
 
 
     }
