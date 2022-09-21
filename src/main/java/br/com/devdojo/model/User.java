@@ -8,7 +8,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
-@Table(name = "usario")
+@Table(name = "usuario")
 public class User extends AbstractEntity{
 
     @NotEmpty

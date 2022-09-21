@@ -5,8 +5,6 @@ import br.com.devdojo.model.User;
 import br.com.devdojo.repository.StudentRepository;
 import br.com.devdojo.repository.UserRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.BeforeClass;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,13 +19,18 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @ExtendWith(SpringExtension.class)
@@ -73,6 +76,9 @@ public class StudentEndpointTest {
             userRepository.save(user);
             criado = true;
         }
+        List<Student> students = asList(new Student("Legolas", "legolas@hotmail.com", 1l),
+                new Student("Aragorn", "aragorn@hotmail.com", 2l));
+        BDDMockito.when(studentRepository.findAll()).thenReturn(students);
     }
 
 
@@ -92,13 +98,29 @@ public class StudentEndpointTest {
 
     @Test
     public void listStudentsWhenUsernameAndPasswordAreCorrectShouldReturnStatusCode200(){
-        List<Student> students = asList(new Student("Legolas", "legolas@hotmail.com", 1l),
-                new Student("Aragorn", "aragorn@hotmail.com", 2l));
-        BDDMockito.when(studentRepository.findAll()).thenReturn(students);
         ResponseEntity<String> response = restTemplate.getForEntity("/v1/protected/students/", String.class);
         System.out.println(response);
         Assertions.assertThat(response.getStatusCodeValue()).isEqualTo(200);
     }
+
+
+    @Test
+    public void deleteWhenUserHasRoleAdminAndStudentExistsShoudReturnStatusCode200(){
+        BDDMockito.doNothing().when(studentRepository).deleteById(1L);
+        ResponseEntity<String> exchange = restTemplate.exchange("/v1/admin/students/{id}", HttpMethod.DELETE, null, String.class, 1L);
+        Assertions.assertThat(exchange.getStatusCodeValue()).isEqualTo(200);
+    }
+
+//    @Test
+//    @WithMockUser(username = "xx", password = "xx", roles = {"USER","ADMIN"})
+//    public void deleteWhenUserHasRoleAdminAndStudentNotExistsShoudReturnStatusCode404() throws Exception {
+//        BDDMockito.doNothing().when(studentRepository).deleteById(70L);
+//        ResultActions perform = mockMvc.perform(MockMvcRequestBuilders
+//                .delete("/v1/admin/students/{id}", 70L));
+//        perform
+//                        .andExpect(status().isNotFound());
+//        System.out.println(perform.andReturn().getRequest().toString());
+//    }
 
 
 }
